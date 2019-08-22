@@ -33,10 +33,10 @@ app.group("/api/v1", (router) => {
 
     // add advertisement
 
-    router.post('/add_addvertisement',Controllers.kost)
+    // router.post('/add_addvertisement',Controllers.kost)
 
-    // add a booking kost
-    router.post('/booking',Controllers.booking)
+    // // // add a booking kost
+    // router.post('/booking',Controllers.booking)
 
     // wanna see my booking list
     // router.post('/mybooking',Controllers.mybookinglist)
