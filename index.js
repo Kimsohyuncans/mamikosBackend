@@ -4,7 +4,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 require('express-group-routes')
 const app = express()
-const port = 1337
 
 // Controllers
 const Controllers = require('./controllers/index')
@@ -12,7 +11,7 @@ const Controllers = require('./controllers/index')
 app.use(bodyParser.json())
 
 //controllers
-
+const port = process.env.PORT || 8080;
 
 // router group
 app.group("/api/v1", (router) => {
@@ -40,7 +39,7 @@ app.group("/api/v1", (router) => {
     router.post('/booking',Controllers.booking)
 
     // wanna see my booking list
-    router.post('/mybooking',Controllers.mybookinglist)
+    // router.post('/mybooking',Controllers.mybookinglist)
 })
 
 
