@@ -92,26 +92,26 @@ exports.showkost = (req,res) => {
 }
 
 // add a booked kost
-// exports.booking = (req,res) => {
-//     bookinglist.create(req.body)
-//     .then( (result) => {
-//         res.send({
-//             status : 'success',
-//             msg : 'bookingan mu telah di tambahkan '
-//         })
-//     }).catch ( (err) => {
-//         res.send(err)
-//     })
-// }
+exports.booking = (req,res) => {
+    bookinglist.create(req.body)
+    .then( (result) => {
+        res.send({
+            status : 'success',
+            msg : 'bookingan mu telah di tambahkan '
+        })
+    }).catch ( (err) => {
+        res.send(err)
+    })
+}
 
 // show list booking user
-// exports.mybookinglist = (req,res) => {
-//     bookinglist.findAll({
-//         where : {
-//             create_by : jwtdecode(req.body.id).userid
-//         }
-//     }).then( (result ) => {
-//         res.send(result)
-//     })
+exports.mybookinglist = (req,res) => {
+    bookinglist.findAll({
+        where : {
+            create_by : jwtdecode(req.body.id).userid
+        }
+    }).then( (result ) => {
+        res.send(result)
+    })
  
-// }
+}
