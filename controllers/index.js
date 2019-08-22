@@ -57,19 +57,19 @@ exports.login = (req,res) => {
 
 // update user 
 
-exports.update = (req,res) => {
+// exports.update = (req,res) => {
 
-    users.update(req.body,{
-        where : {
-            id : req.params.id
-        }
-    }).then(result => {
-        res.send({
-            status : "success",
-            result
-        })
-    })
-}
+//     users.update(req.body,{
+//         where : {
+//             id : req.params.id
+//         }
+//     }).then(result => {
+//         res.send({
+//             status : "success",
+//             result
+//         })
+//     })
+// }
 
 // add advertisement
 
@@ -104,7 +104,7 @@ exports.showkost = (req,res) => {
 //     })
 // }
 
-// // show list booking user
+// show list booking user
 // exports.mybookinglist = (req,res) => {
 //     bookinglist.findAll({
 //         where : {
