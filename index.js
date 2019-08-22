@@ -14,6 +14,10 @@ app.use(bodyParser.json())
 const port = process.env.PORT || 8080;
 
 // router group
+
+app.get('/' ,(req,res) => {
+    res.send('hello world')
+})
 app.group("/api/v1", (router) => {
 
     router.get('/',Controllers.index)
