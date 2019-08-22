@@ -16,7 +16,7 @@
     "operatorsAliases": false
   },
   "production": {
-    "use_env_variable" : "DATABASE_URL",
+    "use_env_variable" : "postgres://cncgdgpvebjmxy:08aae1993a791960",
     "dialect": "postgres",
     "protocol" : "postgres",
     "dialectOptions" : {
