@@ -42,10 +42,11 @@ exports.login = (req,res) => {
         
         if(result){
             const token = jwt.sign({ userid : result.id }, 'kimsohyun')
+            res.header('Authorization', 'Bearer '+ token)
             res.send({
                 status : 'success',
-                token
             })
+            
         }else{
             res.send({
                 status : 'failed',
@@ -55,21 +56,24 @@ exports.login = (req,res) => {
     })
 }
 
-// update user 
 
-// exports.update = (req,res) => {
 
-//     users.update(req.body,{
-//         where : {
-//             id : req.params.id
-//         }
-//     }).then(result => {
-//         res.send({
-//             status : "success",
-//             result
-//         })
-//     })
-// }
+exports.update = (req,res) => {
+
+    jwt.verify(token,'kimsohyun',(err,authdata) => {
+        if(err){
+            res.status(403).send('token not valid')
+        }else{
+            res.send({
+                token,
+                msg : "sukses",
+                authdata
+             })
+        }
+    })
+    
+    
+}
 
 // add advertisement
 
@@ -85,33 +89,68 @@ exports.kost = (req,res) => {
 
 // show all kost
 exports.showkost = (req,res) => {
-    
     kost.findAll().then( response => {
         res.send(response)
     })
+  
 }
 
 // add a booked kost
 exports.booking = (req,res) => {
-    bookinglist.create(req.body)
-    .then( (result) => {
-        res.send({
-            status : 'success',
-            msg : 'bookingan mu telah di tambahkan '
-        })
-    }).catch ( (err) => {
-        res.send(err)
+
+    jwt.verify(token,'kimsohyun',(err,authdata) => {
+        if(!err){
+
+            
+            bookinglist.create({
+                create_by : authdata.userid,
+                kost_id : req.body.kost_id,
+                datebook : req.body.datebook,
+                status : req.body.status,
+            }).then( (result) => {
+                res.status(200).send({
+                    status : 'success',
+                })
+            }).catch(err => {
+                res.status(500).send({
+                    status : err
+                })
+            })
+        }else{
+            res.send({
+                status:err
+            })
+        }
     })
+    
 }
 
 // show list booking user
 exports.mybookinglist = (req,res) => {
-    bookinglist.findAll({
-        where : {
-            create_by : jwtdecode(req.body.id).userid
+    jwt.verify(token,'kimsohyun',(err,authdata) => {
+        if(err){
+            res.status(403).send({
+                status: "failed",
+                msg : "token not valid"
+            })
+        }else{
+            bookinglist.findAll({
+                where : {
+                    create_by : authdata.userid
+                },
+                include : [{
+                    model : kost,
+                    as : 'kostID'
+                }]
+            }).then( (result) => {
+                
+                res.send(result)
+
+            })
         }
-    }).then( (result ) => {
-        res.send(result)
+        
     })
+    
  
 }
+

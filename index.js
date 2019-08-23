@@ -8,6 +8,9 @@ const app = express()
 // Controllers
 const Controllers = require('./controllers/index')
 
+//middleware authentication
+const Authentication = require('./middleware.js').authentication
+
 app.use(bodyParser.json())
 
 //controllers
@@ -20,7 +23,7 @@ app.get('/' ,(req,res) => {
 })
 app.group("/api/v1", (router) => {
 
-    router.get('/',Controllers.index)
+    // router.get('/',Controllers.index)
     
     // register router
     router.post('/regis',Controllers.register)
@@ -28,8 +31,7 @@ app.group("/api/v1", (router) => {
     // login router 
     router.post('/login', Controllers.login)
 
-    // update router
-    // router.patch('/:id',Controllers.update)
+    router.post('/',Authentication,Controllers.update)
 
     // show all kokst
     
@@ -40,10 +42,10 @@ app.group("/api/v1", (router) => {
     router.post('/add_addvertisement',Controllers.kost)
 
     // // // add a booking kost
-    router.post('/booking',Controllers.booking)
+    router.post('/booking',Authentication,Controllers.booking)
 
     // wanna see my booking list
-    router.post('/mybooking',Controllers.mybookinglist)
+    router.get('/mybooking',Authentication,Controllers.mybookinglist)
 })
 
 
