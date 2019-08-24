@@ -3,6 +3,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 require('express-group-routes')
+const multer = require('multer')
 const app = express()
 
 // Controllers
@@ -16,11 +17,25 @@ app.use(bodyParser.json())
 //controllers
 const port = process.env.PORT || 8080;
 
+
+// multer configuration
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'public/images/')
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+var upload = multer({storage: storage});
+
+
+
+
+
 // router group
 
-app.get('/' ,(req,res) => {
-    res.send('hello world')
-})
+
 app.group("/api/v1", (router) => {
 
     // router.get('/',Controllers.index)
@@ -46,6 +61,17 @@ app.group("/api/v1", (router) => {
 
     // wanna see my booking list
     router.get('/mybooking',Authentication,Controllers.mybookinglist)
+
+    // upload gambar
+    router.post('/uploadimg',upload.single('myimg'),(req,res) => {
+        if(!req.file){
+            res.status(500).send({
+                "msg" : "please upload a file"
+            })
+        }else{
+            res.send(req.file)
+        }
+    })
 })
 
 
