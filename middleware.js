@@ -1,5 +1,5 @@
 exports.authentication = (req,res,next) => {
-    k
+    
     if(typeof req.headers['authorization'] !== 'undefined'){
         
         bearer = req.headers['authorization'].split(' ')

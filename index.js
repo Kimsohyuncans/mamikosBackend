@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 require('express-group-routes')
 const multer = require('multer')
 const app = express()
+const path = require('path');
 
 // Controllers
 const Controllers = require('./controllers/index')
@@ -12,7 +13,9 @@ const Controllers = require('./controllers/index')
 //middleware authentication
 const Authentication = require('./middleware.js').authentication
 
+
 app.use(bodyParser.json())
+app.use('/public', express.static(path.join(__dirname, 'public/images')))
 
 //controllers
 const port = process.env.PORT || 8080;
@@ -24,10 +27,11 @@ var storage = multer.diskStorage({
       cb(null, 'public/images/')
     },
     filename: (req, file, cb) => {
-      cb(null, file.fieldname + '-' + Date.now())
+      cb(null, file.originalname)
     }
 });
 var upload = multer({storage: storage});
+var uploadimg = upload.single('myimg')
 
 
 
@@ -63,14 +67,25 @@ app.group("/api/v1", (router) => {
     router.get('/mybooking',Authentication,Controllers.mybookinglist)
 
     // upload gambar
-    router.post('/uploadimg',upload.single('myimg'),(req,res) => {
-        if(!req.file){
-            res.status(500).send({
-                "msg" : "please upload a file"
-            })
-        }else{
-            res.send(req.file)
-        }
+    router.post('/uploadimg',(req,res) => {
+        uploadimg(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+              res.send(err);
+            } else if (err) {
+                res.send(err);
+            }
+            
+            if(req.file){
+                res.send({
+
+                    image : req.file,
+                    data : req.body
+                    
+                })
+            }else{
+                res.send("gagal")
+            }
+        })
     })
 })
 
