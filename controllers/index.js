@@ -1,11 +1,24 @@
 const jwt = require('jsonwebtoken')
 const md5 = require('md5')
 const jwtdecode = require('jwt-decode')
+const multer = require('multer')
 
 // table users model
 const users = require('../models').users
 const kost = require('../models').kost
 const bookinglist = require('../models').bookinglist
+
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'static/images/')
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname)
+    }
+});
+
+var upload = multer({storage: storage});
+var uploadimg = upload.single('myimg')
 
 
 exports.index = (req, res) => {
@@ -77,14 +90,54 @@ exports.update = (req,res) => {
 
 // add advertisement
 
-exports.kost = (req,res) => {
-    
-    const data = req.body
-    kost.create(data).then(response => {
-        res.send({
-            status : 'success',
+exports.add_kost = (req,res) => {
+        
+    jwt.verify(token,'kimsohyun',(err,authdata) => {
+
+
+        uploadimg(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+            res.send(err);
+            } else if (err) {
+                res.send(err);
+            }
+            
+            if(req.file){
+                
+                const {title,price,description,location,city,photos,seller,contact,gender,availablerooms,large,facility} = req.body
+
+                kost.create({
+                    title,
+                    price,
+                    description,
+                    location,
+                    city,
+                    photos,
+                    seller,
+                    contact,
+                    gender,
+                    availablerooms,
+                    large,
+                    facility,
+                    create_by : authdata.userid
+
+                }).then(respon => {
+                    res.send({
+                        status : 'success',
+                        msg : 'your advertisement has been added'
+                    })
+                })
+
+                
+            }else{
+                res.send({
+                    status : 'failed',
+                    msg : 'there is something error '
+                })
+            }
         })
     })
+        
 }
 
 // show all kost
